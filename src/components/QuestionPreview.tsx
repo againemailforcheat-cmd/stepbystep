@@ -3,6 +3,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import { ExtractedQuestion } from '../lib/gemini';
 import { FileText, CheckCircle, Circle, Hash, Edit3, Trash2, ImagePlus, Image } from 'lucide-react';
+import { DiagramRenderer, CompactDiagramRenderer } from './DiagramRenderer';
 
 interface QuestionPreviewProps {
   question: ExtractedQuestion;
@@ -197,6 +198,20 @@ export function QuestionPreview({ question, index, onDelete, onImageUpload, show
         </div>
       </div>
 
+      {/* Question Diagram */}
+      {(question as any).diagram_json && (
+        <div className="mb-4">
+          <h4 className="text-md font-semibold text-gray-800 mb-3">Question Diagram:</h4>
+          <div className="bg-white p-4 rounded-lg border border-gray-100">
+            <DiagramRenderer
+              diagramJson={(question as any).diagram_json}
+              width={600}
+              height={400}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Uploaded Image */}
       {question.uploaded_image && (
         <div className="mb-4">
@@ -239,6 +254,18 @@ export function QuestionPreview({ question, index, onDelete, onImageUpload, show
                     {renderMathContent(option)}
                   </div>
                 </div>
+
+                {/* Option Diagram */}
+                {(question as any).options_diagrams &&
+                 (question as any).options_diagrams[optionIndex] && (
+                  <div className="mt-2">
+                    <CompactDiagramRenderer
+                      diagramJson={(question as any).options_diagrams[optionIndex]}
+                      width={250}
+                      height={150}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -254,15 +281,37 @@ export function QuestionPreview({ question, index, onDelete, onImageUpload, show
               <div className="bg-green-50 p-3 rounded-lg border border-green-200">
                 <span className="text-green-800 font-medium">{question.answer}</span>
               </div>
+
+              {/* Answer Diagram */}
+              {(question as any).answer_diagram && (
+                <div className="mt-3">
+                  <CompactDiagramRenderer
+                    diagramJson={(question as any).answer_diagram}
+                    width={400}
+                    height={250}
+                  />
+                </div>
+              )}
             </div>
           )}
-          
+
           {question.solution && (
             <div>
               <h4 className="text-md font-semibold text-gray-800 mb-3">Solution:</h4>
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-blue-800">
                 {renderMathContent(question.solution)}
               </div>
+
+              {/* Solution Diagram */}
+              {(question as any).solution_diagram && (
+                <div className="mt-3">
+                  <DiagramRenderer
+                    diagramJson={(question as any).solution_diagram}
+                    width={600}
+                    height={400}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

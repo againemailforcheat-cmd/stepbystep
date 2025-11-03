@@ -309,6 +309,10 @@ export interface ExtractedQuestion {
   topic_id?: string;
   is_wrong?: boolean;
   validation_reason?: string;
+  diagram_json?: any;
+  options_diagrams?: any[];
+  answer_diagram?: any;
+  solution_diagram?: any;
 }
 
 // Gemini API Keys - Smart Round Robin System with Error Tracking
